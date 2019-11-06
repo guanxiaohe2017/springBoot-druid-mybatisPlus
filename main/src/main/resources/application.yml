@@ -1,0 +1,87 @@
+#JDBC基本配置
+server:
+  port: 8088
+spring:
+  datasource:
+    druid:
+      #数据源1
+      datasource1:
+        url: jdbc:mysql://localhost:3306/test1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+        username: root
+        password: 123
+        driverClassName: com.mysql.cj.jdbc.Driver
+      #数据源2
+      datasource2:
+        #MyISAM和InnoDB是两种最常用的数据库引擎，默认的引擎是MyISAM，性能最好，但不支持事务处理，只有InnoDB支持事务
+        url: jdbc:mysql://localhost:3306/test2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+        username: root
+        password: 123
+        driverClassName: com.mysql.cj.jdbc.Driver
+      #连接池配置
+      initial-size: 5
+      max-active: 100
+      min-idle: 5
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      validation-query: SELECT 1 FROM DUAL
+      validation-query-timeout: 60000
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 100000
+      ###监控配置 begin###
+      web-stat-filter:
+        # WebStatFilter配置，说明请参考Druid Wiki，配置_配置WebStatFilter
+        enabled: true
+        url-pattern: "/*"
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+      stat-view-servlet:
+        # StatViewServlet配置，说明请参考Druid Wiki，配置_StatViewServlet配置
+        enabled: true
+        url-pattern: "/druid/*"
+        reset-enable: false
+        login-username: admin
+        login-password: 123456
+        allow: 127.0.0.1
+      ###监控配置 end###
+      filter:
+      # 配置StatFilter
+        stat:
+          db-type: mysql
+          log-slow-sql: true
+          slow-sql-millis: 5000
+        # 配置WallFilter
+        wall:
+          enabled: true
+          db-type: mysql
+          config:
+            delete-allow: false
+            drop-table-allow: false
+
+globalConfig1:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+  idType: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+  fieldStrategy: 2
+    #驼峰下划线转换
+  dbColumnUnderline: true
+    #刷新mapper 调试神器
+  refreshMapper: true
+
+globalConfig2:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+  idType: 3
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+  fieldStrategy: 2
+    #驼峰下划线转换
+  dbColumnUnderline: true
+    #刷新mapper 调试神器
+  refreshMapper: true
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:/com/gch/**/*Mapper.xml
